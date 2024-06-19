@@ -24,6 +24,8 @@ const EsbuildPluginImportGlob = (): Plugin => ({
           cwd: args.pluginData.resolveDir,
         })
       ).sort();
+      
+      console.log(args.path);   
 
       let importerCode = `
         ${files
