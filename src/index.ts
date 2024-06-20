@@ -87,6 +87,7 @@ const EsbuildPluginImportGlob = (options): Plugin => ({
         }
        
       });
+     const nonShemaFilesCount =  Math.max(1, nonShemaFiles.length - 1);
       const schemaCompiledFiles = Object.keys(schemas);
   
 
@@ -96,19 +97,17 @@ const EsbuildPluginImportGlob = (options): Plugin => ({
         .join(';')}
         
         ${schemaCompiledFiles
-          .map((module, index) => `const schema${index} = (function() {
+          .map((module, index) => `const schema${nonShemaFilesCount + index} = (function() {
             ${schemas[module]}
             return validate;
           })()`)
           .join(';')}
-    
-      let fileModules = [${nonShemaFiles
-          .map((module, index) => `module${index}`)
-          .join(',')}];
-        
-      const modules = fileModules.concat([${schemaCompiledFiles
-          .map((module, index) => `schema${index}`)
-          .join(',')}]);
+  
+      const modules = [...[${nonShemaFiles
+        .map((module, index) => `module${index}`)
+        .join(',')}],...[${schemaCompiledFiles
+          .map((module, index) => `schema${nonShemaFilesCount + index}`)
+          .join(',')}])];
 
         export default modules;
         export const filenames = [...[${nonShemaFiles
