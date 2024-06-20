@@ -69,7 +69,7 @@ const EsbuildPluginImportGlob = (options): Plugin => ({
         const validate = ajv.compile(schema);
         if (validate) {
           // 1. generate module with a single default export (CommonJS and ESM compatible):
-          return standaloneCode(ajv, validate).toString().replace("export const", "const").replace("export default validate", "const empty_void");
+          return standaloneCode(ajv, validate).toString().replace("export const", "const").replace("export default validate", "var empty_void");
         } else {
           console.log({ message: 'Fail to compile schema', filePath });
           return null;
