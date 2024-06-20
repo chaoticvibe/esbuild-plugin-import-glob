@@ -49,11 +49,11 @@ const EsbuildPluginImportGlob = (options): Plugin => ({
           defaultAjvOptions,
           options.ajv || {},
           {
-            code: { source: true },
+            code: { source: true,   },
           }
         );
 
-        let ajv = new Ajv(ajvOptions);
+        let ajv = new Ajv({code:{source:true, esm:true}});
         if (!options.serverSide) {
           require('ajv-errors')(ajv /*, {singleError: true} */);
         }
