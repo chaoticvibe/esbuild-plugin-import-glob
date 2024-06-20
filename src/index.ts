@@ -69,7 +69,7 @@ const EsbuildPluginImportGlob = (options): Plugin => ({
         const validate = ajv.compile(schema);
         if (validate) {
           // 1. generate module with a single default export (CommonJS and ESM compatible):
-          return standaloneCode(ajv, validate).toString().replace("function validade", "function validate"+index);
+          return standaloneCode(ajv, validate).toString();
         } else {
           console.log({ message: 'Fail to compile schema', filePath });
           return null;
@@ -82,6 +82,7 @@ const EsbuildPluginImportGlob = (options): Plugin => ({
       )=>{
         const schema = compileSchema(file, index);
         if(schema){
+          console.log(schema);
           schemas[file] = schema;
         }
        
@@ -95,7 +96,10 @@ const EsbuildPluginImportGlob = (options): Plugin => ({
         .join(';')}
         
         ${schemaCompiledFiles
-          .map((module, index) => `const schema${index} = ${schemas[module]}`)
+          .map((module, index) => `const schema${index} = (function() {
+            ${schemas[module]}
+            return validate;
+          })()`)
           .join(';')}
     
       let fileModules = [${nonShemaFiles
