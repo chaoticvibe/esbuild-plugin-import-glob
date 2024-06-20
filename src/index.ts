@@ -82,7 +82,6 @@ const EsbuildPluginImportGlob = (options): Plugin => ({
       )=>{
         const schema = compileSchema(file, index);
         if(schema){
-          console.log(schema);
           schemas[file] = schema;
         }
        
@@ -98,7 +97,6 @@ const EsbuildPluginImportGlob = (options): Plugin => ({
         
         ${schemaCompiledFiles
           .map((module, index) => `const schema${nonShemaFilesCount + index} = (function() {
-            'use strict';
             ${schemas[module]}
             return validate;
           })()`)
