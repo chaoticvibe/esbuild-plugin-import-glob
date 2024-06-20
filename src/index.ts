@@ -108,7 +108,7 @@ const EsbuildPluginImportGlob = (options): Plugin => ({
         .map((module, index) => `module${index}`)
         .join(',')}],...[${schemaCompiledFiles
           .map((module, index) => `schema${nonShemaFilesCount + index}`)
-          .join(',')}])];
+          .join(',')}]];
 
         export default modules;
         export const filenames = [...[${nonShemaFiles
