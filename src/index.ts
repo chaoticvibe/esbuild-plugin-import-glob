@@ -32,7 +32,7 @@ const EsbuildPluginImportGlob = (options): Plugin => ({
       const nonShemaFiles = files.filter((file) => !file.endsWith('schema.json'));
       const schemaFiles = files.filter((file) => file.endsWith('schema.json'));
       const compileSchema = (filePath) => {
-        const file = fs.readFileSync(filePath, 'utf-8');
+        const file = fs.readFileSync(path.resolve(args.pluginData.resolveDir, filePath), 'utf-8');
         const defaultAjvOptions = { ...options };
         // Maybe will be used in future
         // { sourceCode: true } should not be overridden
