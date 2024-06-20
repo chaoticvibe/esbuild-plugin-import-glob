@@ -31,10 +31,10 @@ const EsbuildPluginImportGlob = (options): Plugin => ({
    
       const nonShemaFiles = files.filter((file) => !file.endsWith('schema.json'));
       const schemaFiles = files.filter((file) => file.endsWith('schema.json'));
-      const compileSchema = (filePath) => {
+      const compileSchema = (filePath, index) => {
         const file = fs.readFileSync(path.resolve(args.pluginData.resolveDir, filePath), 'utf-8');
         const defaultAjvOptions = { ...options };
-        // Maybe will be used in future
+        // Maybe will be used in futureargs.pluginData.resolveDir, fileP
         // { sourceCode: true } should not be overridden
         if (options.serverSide && options.ajv && options.ajv.allErrors) {
           options.ajv.allErrors = false;
@@ -69,7 +69,7 @@ const EsbuildPluginImportGlob = (options): Plugin => ({
         const validate = ajv.compile(schema);
         if (validate) {
           // 1. generate module with a single default export (CommonJS and ESM compatible):
-          return standaloneCode(ajv, validate).toString();
+          return standaloneCode(ajv, validate).toString().replace("function validade", "function validate"+index);
         } else {
           console.log({ message: 'Fail to compile schema', filePath });
           return null;
@@ -78,9 +78,9 @@ const EsbuildPluginImportGlob = (options): Plugin => ({
       const schemas = {};
       
       schemaFiles.forEach((
-        file
+        file, index
       )=>{
-        const schema = compileSchema(file);
+        const schema = compileSchema(file, index);
         if(schema){
           schemas[file] = schema;
         }
@@ -109,7 +109,7 @@ const EsbuildPluginImportGlob = (options): Plugin => ({
         export default modules;
         export const filenames = [...[${nonShemaFiles
           .map((module, index) => `'${module}'`)
-          .join(',')}], [${schemaCompiledFiles
+          .join(',')}], ...[${schemaCompiledFiles
             .map((module, index) => `'${module}'`)
             .join(',')}]]
       `;
